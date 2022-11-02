@@ -47,4 +47,4 @@ modelsummary(modelo, title = "Resumen de Regresion Lineal",
 
 Al analizar los tres factores en el mismo modelo, solo la libertad económica tienen un efecto significativo positivo en el desarrollo humano. Esto significa que a mayor libertad económica, mayor idh.
 
-## 3. Análisis facyotial
+## 3. Análisis factorial
