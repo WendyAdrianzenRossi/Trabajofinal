@@ -18,22 +18,22 @@ library(htmltab)
 
 *Variable dependiente: Índice de Desarrollo Humano*
 ```{r}
-dataidh= import("https://github.com/WendyAdrianzenRossi/TrabajoE2/blob/main/idh.xlsx?raw=true")
+dataidh= import("https://github.com/WendyAdrianzenRossi/Trabajofinal/blob/main/idh.xlsx?raw=true")
 ```
 
 *Variable independiente 1: Libertad económica*
 ```{r}
-dataeco=import("https://github.com/WendyAdrianzenRossi/TrabajoE2/blob/main/economia.xlsx?raw=true")
+dataeco=import("https://github.com/WendyAdrianzenRossi/Trabajofinal/blob/main/economia.xlsx?raw=true")
 ```
 
 *Variable independiente 2: Democracia*
 ```{r}
-datademo=import("https://github.com/WendyAdrianzenRossi/TrabajoE2/blob/main/democracia.xlsx?raw=true")
+datademo=import("https://github.com/WendyAdrianzenRossi/Trabajofinal/blob/main/democracia.xlsx?raw=true")
 ```
 
 *Variable independiente 3: Brecha de género*
 ```{r}
-datagender=import("https://github.com/WendyAdrianzenRossi/TrabajoE2/raw/main/genero.csv")
+datagender=import("https://github.com/WendyAdrianzenRossi/Trabajofinal/raw/main/genero.csv")
 ```
 
 2. Limpieza de la base de datos
