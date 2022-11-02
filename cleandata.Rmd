@@ -1,0 +1,228 @@
+---
+title: "cleandata"
+author: "Wendy"
+date: '2022-11-02'
+output: html_document
+---
+
+Entrega 3: 
+
+
+1. Apertura de la base de datos
+Empecemos abriendo nuestras bases de datos.
+
+```{r}
+library(rio)
+library(htmltab)
+```
+
+*Variable dependiente: Índice de Desarrollo Humano*
+```{r}
+dataidh= import("https://github.com/WendyAdrianzenRossi/TrabajoE2/blob/main/idh.xlsx?raw=true")
+```
+
+*Variable independiente 1: Libertad económica*
+```{r}
+dataeco=import("https://github.com/WendyAdrianzenRossi/TrabajoE2/blob/main/economia.xlsx?raw=true")
+```
+
+*Variable independiente 2: Democracia*
+```{r}
+datademo=import("https://github.com/WendyAdrianzenRossi/TrabajoE2/blob/main/democracia.xlsx?raw=true")
+```
+
+*Variable independiente 3: Brecha de género*
+```{r}
+datagender=import("https://github.com/WendyAdrianzenRossi/TrabajoE2/raw/main/genero.csv")
+```
+
+2. Limpieza de la base de datos
+
+*Variable dependiente: Índice de Desarrollo Humano*
+```{r}
+#Eliminamos las columnas innecesarias y renombramos
+dataidh=dataidh[,c(2,3)]
+names(dataidh)= c("country","scoreidh")
+```
+
+```{r}
+#Revisamos las primeras y últimas filas para ver si tenemos información no útil
+head(dataidh,10)
+tail(dataidh, 10)
+dataidh= dataidh[-c(1:5,197:204),]
+```
+```{r}
+#Revisando la data, se identifica que hay algunas filas adicionales innecesarias. Por ende, las eliminamos
+row.names(dataidh)= NULL
+dataidh= dataidh[-c(52,108,150),]
+```
+
+```{r}
+#Volvemos a reiniciar el índice
+row.names(dataidh)= NULL
+#Vemos la str
+str(dataidh)
+#Cambiamos a numérica la variable idh
+dataidh$scoreidh=as.numeric(dataidh$scoreidh)
+```
+
+*Variable independiente: Libertad económica*
+```{r}
+#Eliminamos las columnas innecesarias y renombramos
+dataeco=dataeco[,c(2,7)]
+names(dataeco)= c("country","scoreEco")
+```
+
+```{r}
+#Vemos que hay los NA están como texto, lo cambiamos
+dataeco$scoreEco[dataeco$scoreEco== "N/A"] = NA
+```
+
+```{r}
+#Vemos la str
+str(dataeco)
+#Cambiamos a numérica la variable scoreEco
+dataeco$scoreEco=as.numeric(dataeco$scoreEco)
+```
+
+*Variable independiente: índice de democracia*
+```{r}
+#Eliminamos las columnas innecesarias y renombramos
+datademo=datademo[,c(2,3)]
+names(datademo)= c("country","scoreDemo")
+```
+
+```{r}
+#Vemos que hay varias filas innecesarias
+datademo= datademo[-c(1,21,22,80,81,121,122,175,176),]
+#Reiniciamos el índice
+row.names(datademo)= NULL
+```
+
+```{r}
+#Vemos la str
+str(datademo)
+#Cambiamos a numérica la variable scoreDemo
+datademo$scoreDemo=as.numeric(datademo$scoreDemo)
+```
+
+*Variable independiente: Brecha de género*
+```{r}
+#Eliminamos las columnas innecesarias y renombramos
+datagender=datagender[,c(1,2)]
+names(datagender)= c("country","scoreGender")
+```
+
+```{r}
+#Revisamos las primeras filas para ver si tenemos información no útil
+head(datagender,10)
+datagender= datagender[-c(1:3),]
+#Como hemos eliminado filas, reiniciamos el índice
+row.names(datagender)=NULL
+```
+
+```{r}
+#Vemos la str
+str(datagender)
+#Cambiamos a numérica la variable scoreDemo
+datagender$scoreGender=as.numeric(datagender$scoreGender)
+```
+3. Integración de datos
+
+Antes de hacer la integración de la base de datos, identificamos los casos comúnes
+```{r}
+#Con este código identificamos los casos comúnes
+commonID= intersect(dataidh$country,dataeco$country) 
+#Con este código pedimos que nos muestren los que NO son iguales.
+dataidh[!dataidh$country %in% commonID,]
+```
+Podemos identificar 28 países que son distintos. Para no perder los casos, procedemos a limpiar los nombres.
+```{r}
+dataidh[12,1]= "Hong Kong SAR"
+dataidh[18,1]= "South Korea"
+dataidh[40,1]= "Slovak Republic"
+dataidh[49,1]= "Russia"
+dataidh[69,1]= "Iran"
+dataidh[72,1]= "Venezuela"
+dataeco[139,1]= "Saint Vincent and the Grenadines"
+dataidh[107,1]= "Moldova"
+dataidh[114,1]= "Palestine"
+dataidh[115,1]= "Vietnam"
+dataidh[118,1]= "Bolivia"
+dataeco[90,1]= "Kyrgyzstan"
+dataeco[38,1]= "Congo"
+dataidh[128,1]= "Micronesia"
+dataidh[138,1]= "Lao"
+dataeco[141,1]= "Sao Tome and Principe"
+dataidh[149,1]= "Syria"
+dataidh[151,1]= "Tanzania"
+dataidh[176,1]= "Democratic Congo"
+dataeco[37,1]= "Democratic Congo"
+dataidh[182,1]= "South Sudan"
+dataidh[82,1]= "Macedonia"
+```
+
+OJO: Si vuelven a correr el código de la línea 107 notarán que hay aún algunos casos diferentes. Estos son los casos que no están en una de las dos bases de datos y, por ende, no podemos recuperar esa info.
+
+
+Ahora que tenemos limpio los datos, procedemos a realizar el primer merge
+```{r}
+merge1= merge(dataidh,dataeco, by.x = "country", by.y = "country")
+```
+
+Procedemos a hacer el mismo trabajo con la variable pendiente: datademo
+
+```{r}
+commonID= intersect(merge1$country,datademo$country) 
+datademo[!datademo$country %in% commonID,]
+```
+Corregimos las variables que podamos
+```{r}
+datademo[24,1]= "Cabo Verde"
+datademo[132,1]= "Congo"
+datademo[116,1]= "Côte d'Ivoire"
+datademo[163,1]= "Democratic Congo"
+datademo[71,1]= "Hong Kong SAR"
+datademo[152,1]= "Lao"
+datademo[44,1]= "Slovak Republic"
+datademo[33,1]= "Taiwan"
+```
+
+Procedemos a realizar el segundo merge:
+```{r}
+merge2= merge(merge1,datademo, by.x = "country", by.y = "country")
+```
+
+Procedemos a hacer el mismo trabajo con la variable pendiente: datagender
+
+```{r}
+commonID= intersect(merge2$country,datagender$country) 
+datagender[!datagender$country %in% commonID,]
+```
+
+Corregimos
+```{r}
+datagender[36,1]="Cabo Verde"
+datagender[81,1]="Kyrgyzstan"
+```
+
+
+Procedemos a realizar el último merge:
+```{r}
+datafinal= merge(merge2,datagender, by.x = "country", by.y = "country")
+```
+
+Por último, nos quedamos con los casos completos para cada variable.
+```{r}
+datafinal <- datafinal[complete.cases(datafinal), ]
+#Reiniciamos el índice
+row.names(datafinal)= NULL
+```
+
+4. Exportar
+Cerramos el proceso de limpieza, exportando la data como csv.
+```{r}
+library(rio)
+export(datafinal, "datafinal.csv")
+```
+
