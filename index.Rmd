@@ -26,6 +26,7 @@ data= import("https://github.com/WendyAdrianzenRossi/Trabajofinal/raw/main/dataf
 ## 1. Análisis rápido de la data
 
 ## 2. Modelación
+En este caso, se hará una regresión lineal múltiple
 
 ```{r echo=FALSE}
 modelo= lm(scoreidh ~ scoreEco+ scoreDemo + scoreGender, data=data) 
@@ -48,3 +49,4 @@ modelsummary(modelo, title = "Resumen de Regresion Lineal",
 Al analizar los tres factores en el mismo modelo, solo la libertad económica tienen un efecto significativo positivo en el desarrollo humano. Esto significa que a mayor libertad económica, mayor idh.
 
 ## 3. Análisis factorial
+
