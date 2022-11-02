@@ -1,0 +1,46 @@
+---
+title: "Análisis de los factores que influyen en el IDH"
+author: "Wendy Adrianzén"
+date: "Noviembre, 2022"
+subtitle: 'Curso: POL304 - Estadística para el análisis político 2'
+output:
+  prettydoc::html_pretty:
+    theme: hpstr
+    highlight: github
+    toc: true
+---
+
+```{r,echo=FALSE, out.width="40%",fig.align="center"}
+knitr::include_graphics("logoPUCP.png") 
+```
+
+## Introducción
+La siguiente investigación analiza los factores que pueden favorecer el índice de desarrollo humano propuestos por la PNUD. Se sostiene que existen tres factores principales; sociales, políticos y económicos, El factor político será medido a través del nivel de democratización, el económico por las libertades económicas y, finalmente, el social será la brecha de género
+
+```{r, echo=FALSE}
+library(rio)
+data= import("https://github.com/WendyAdrianzenRossi/Trabajofinal/raw/main/datafinal.csv")
+```
+
+## 1. Análisis rápido de la data
+
+## 2. Modelación
+```{r echo=FALSE}
+modelo= lm(scoreidh ~ scoreEco+ scoreDemo + scoreGender, data=data) 
+summary(modelo)
+```
+```{r echo=FALSE}
+equatiomatic::extract_eq(modelo, use_coefs = TRUE)
+```
+
+```{r echo=FALSE}
+library(knitr)
+library(modelsummary)
+modelo1=list('OLS asegurados (I)'=modelo)
+modelsummary(modelo, title = "Resumen de Regresion Lineal",
+             stars = TRUE,
+             output = "kableExtra")
+```
+
+Al analizar los tres factores en el mismo modelo, solo la libertad económica tienen un efecto significativo positivo en el desarrollo humano. Esto significa que a mayor libertad económica, mayor idh.
+
