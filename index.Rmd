@@ -9,6 +9,7 @@ output:
     highlight: github
     toc: true
 ---
+hello
 
 ```{r,echo=FALSE, out.width="40%",fig.align="center"}
 knitr::include_graphics("logoPUCP.png") 
